@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de Relacionamento - Julho 2026</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .chart-container { min-height: 350px; }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-slate-50 to-slate-100 min-h-screen">
+    <header class="bg-white border-b border-slate-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-6 py-8">
+            <h1 class="text-4xl font-bold text-slate-900 uppercase">RELACIONAMENTO - JULHO/2026</h1>
+            <p class="text-slate-500 mt-2">Visão Gerencial</p>
+            <p class="text-slate-600 text-sm mt-4">
+                Panorama dos atendimentos realizados por área e canal no mês de julho/2026.
+            </p>
+        </div>
+    </header>
+    <main class="max-w-7xl mx-auto px-6 py-8">
+        <!-- KPIs Principais -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-blue-600">
+                <div class="flex items-center justify-between">
+                    <div><p class="text-slate-600 text-sm font-medium uppercase">Total de Atendimentos</p><p class="text-3xl font-bold text-slate-900 mt-2">17.442</p></div>
+                    <div class="bg-blue-100 p-4 rounded-full"><i data-lucide="bar-chart-3" class="w-8 h-8 text-blue-600"></i></div>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-blue-400">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-slate-600 text-sm font-medium uppercase">Base de Ativos</p>
+                        <p class="text-3xl font-bold text-slate-900 mt-2">169.033</p>
+                        <p class="text-[10px] text-slate-400 mt-1 italic">Base GPO não inclusa</p>
+                    </div>
+                    <div class="bg-blue-100 p-4 rounded-full"><i data-lucide="users" class="w-8 h-8 text-blue-400"></i></div>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-yellow-500">
+                <div class="flex items-center justify-between">
+                    <div><p class="text-slate-600 text-sm font-medium uppercase">Atendimentos / Base</p><p class="text-3xl font-bold text-slate-900 mt-2">10,31%</p></div>
+                    <div class="bg-yellow-100 p-4 rounded-full"><i data-lucide="trending-up" class="w-8 h-8 text-yellow-600"></i></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Evolução Comparativa -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8 relative">
+            <h2 class="text-lg font-bold text-slate-900 mb-6 uppercase">Evolução Comparativa de Atendimentos Consolidados</h2>
+            <div id="evolutionChart" class="chart-container"></div>
+            <div class="absolute bottom-10 right-10 flex flex-col items-end text-[10px] font-bold pr-2 pb-2">
+                <span class="text-yellow-600">% da Base</span>
+                <span class="text-blue-500">Base de Ativos</span>
+            </div>
+        </div>
+
+        <!-- Distribuição por Canal (WhatsApp vs E-mail) -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+            <div class="lg:col-span-1">
+                <div class="bg-white rounded-lg shadow-md overflow-hidden h-full">
+                    <div class="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-4"><h2 class="text-white font-bold text-lg uppercase">Volume Total por IE</h2></div>
+                    <div class="overflow-x-auto"><table class="w-full"><thead class="bg-slate-50 border-b border-slate-200"><tr><th class="px-6 py-3 text-left text-sm font-semibold text-slate-700">IE</th><th class="px-6 py-3 text-right text-sm font-semibold text-slate-700">CASOS</th></tr></thead><tbody id="ieTotalTableBody"></tbody></table></div>
+                </div>
+            </div>
+            <div class="lg:col-span-2">
+                <div class="bg-white rounded-lg shadow-md p-6 h-full">
+                    <h2 class="text-lg font-bold text-slate-900 mb-6 uppercase">Distribuição por Canal de Atendimento</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                        <div class="relative"><div id="canalChart"></div><div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -mt-2 text-center pointer-events-none"><span class="block text-4xl font-bold text-slate-900">17.442</span><span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Atendimentos</span></div></div>
+                        <div class="space-y-4" id="canalLegend"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabelas Detalhadas: WhatsApp e E-mail -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+            <!-- Tabela WhatsApp -->
+            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                <div class="bg-gradient-to-r from-green-500 to-green-600 px-6 py-4 flex items-center gap-2">
+                    <i data-lucide="message-circle" class="text-white w-5 h-5"></i>
+                    <h2 class="text-white font-bold text-lg uppercase">Atendimentos via WhatsApp</h2>
+                </div>
+                <div class="overflow-x-auto"><table class="w-full"><thead class="bg-slate-50 border-b border-slate-200"><tr><th class="px-6 py-3 text-left text-sm font-semibold text-slate-700">IE</th><th class="px-6 py-3 text-right text-sm font-semibold text-slate-700">VOLUME</th></tr></thead><tbody id="wppTableBody"></tbody></table></div>
+            </div>
+
+            <!-- Tabela E-mail -->
+            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                <div class="bg-gradient-to-r from-slate-700 to-slate-800 px-6 py-4 flex items-center gap-2">
+                    <i data-lucide="mail" class="text-white w-5 h-5"></i>
+                    <h2 class="text-white font-bold text-lg uppercase">Atendimentos via E-mail</h2>
+                </div>
+                <div class="overflow-x-auto"><table class="w-full"><thead class="bg-slate-50 border-b border-slate-200"><tr><th class="px-6 py-3 text-left text-sm font-semibold text-slate-700">IE</th><th class="px-6 py-3 text-right text-sm font-semibold text-slate-700">VOLUME</th></tr></thead><tbody id="emailTableBody"></tbody></table></div>
+            </div>
+        </div>
+
+        <!-- Principais Insights -->
+        <section class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <h2 class="text-lg font-bold text-slate-900 mb-6 uppercase">Principais Insights</h2>
+            <div class="space-y-4" id="executiveAnalysis"></div>
+        </section>
+
+        <!-- Detalhamento por Instituição -->
+        <h2 class="text-xl font-bold text-slate-900 mb-6 uppercase tracking-tight">Detalhamento por Instituição</h2>
+        <section class="space-y-6 mb-8" id="ieCards"></section>
+
+        <!-- Maiores Concentradores de Demanda -->
+        <section class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <h2 class="text-lg font-bold text-slate-900 mb-6 uppercase">Maiores Concentradores de Demanda</h2>
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead class="bg-slate-50 border-b border-slate-200">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-sm font-semibold text-slate-700 w-16">RANK</th>
+                            <th class="px-6 py-3 text-left text-sm font-semibold text-slate-700 w-64">MOTIVO</th>
+                            <th class="px-6 py-3 text-left text-sm font-semibold text-slate-700">DESCRIÇÃO DETALHADA</th>
+                        </tr>
+                    </thead>
+                    <tbody id="topMotivosTableBody"></tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Dados de Julho 2026
+        const ieDataTotal = [
+            {name:"PUCRS ONLINE", value:11968, wpp:10100, email:1868},
+            {name:"FAAP ONLINE", value:2375, wpp:1868, email:507},
+            {name:"FSL DIGITAL", value:1482, wpp:1100, email:382},
+            {name:"FIA ONLINE", value:1071, wpp:668, email:403},
+            {name:"UNESC DIGITAL", value:334, wpp:267, email:67},
+            {name:"IMPACTA DIGITAL", value:209, wpp:153, email:56},
+            {name:"SANTA CASA ONLINE", value:3, wpp:0, email:3}
+        ];
+
+        const canalData = [
+            {name:"WhatsApp", value:14156, color:"#22c55e"},
+            {name:"E-mail", value:3286, color:"#334155"}
+        ];
+
+        // Histórico consolidado (adicionando julho)
+        const historicoMensal = [
+            {mes:"jan/26", total:20135, base:134964, percentual:14.93},
+            {mes:"fev/26", total:16718, base:144244, percentual:11.59},
+            {mes:"mar/26", total:20454, base:151338, percentual:13.51},
+            {mes:"abr/26", total:21323, base:156615, percentual:13.61},
+            {mes:"mai/26", total:16377, base:162397, percentual:10.08},
+            {mes:"jun/26", total:15242, base:164717, percentual:9.25},
+            {mes:"jul/26", total:17442, base:169033, percentual:10.31}
+        ];
+
+        // Dados de IEs com logos
+        const ieCardsData = [
+            {
+                name:"PUCRS ONLINE",
+                logo:"https://bucket-vitrine-wl-prod.edtech.com.br/assets-headless/Logo_Icon_0bd832db2a_4f8bfdd079.svg",
+                motivations:"E-mail: Documentos, Acessos, Atividade Avaliativa | WhatsApp: Dúvidas sobre Certificação, Prazo Expirado, Orientação sobre Prazos",
+                stats:{email:1868, wpp:10100},
+                insight:"Principal concentrador com 72,6% do total de atendimentos"
+            },
+            {
+                name:"FAAP ONLINE",
+                logo:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQp6eFbWK4LH6au52iHgm_VpLwDTjZKLz0Sg&s",
+                motivations:"E-mail: Documentos, Atividade Avaliativa, Acessos | WhatsApp: Dúvidas sobre Pendências de Documentos, Orientação sobre Prazos, Falta de Interação",
+                stats:{email:507, wpp:1868},
+                insight:"Segunda maior demanda com 14,4% do total"
+            },
+            {
+                name:"FIA ONLINE",
+                logo:"https://www.fiaonline.com.br/hs-fs/hubfs/FIA-Online---Logo-(Branco)-1-1.webp",
+                motivations:"E-mail: Encerramento dos atendimentos no dia 08/07 | WhatsApp: Dúvidas sobre Certificação, Declaração de Matrícula, Orientação sobre Prazos",
+                stats:{email:403, wpp:668},
+                insight:"Encerramento de atendimentos por e-mail em julho"
+            },
+            {
+                name:"FSL DIGITAL",
+                logo:"https://digital.faculdadesiriolibanes.org.br/hs-fs/hubfs/logo-sirio-libanes-negativo.png",
+                motivations:"E-mail: Documentos, Acessos, Não Aluno | WhatsApp: Senha Expirada, Dúvidas sobre Documentação e Prazos, Bloqueio",
+                stats:{email:382, wpp:1100},
+                insight:"Demanda moderada com 9% do total"
+            },
+            {
+                name:"UNESC DIGITAL",
+                logo:"https://bucket-vitrine-wl-prod.edtech.com.br/assets-headless/logo_49f3ba3e59_1_1_1_5cace08c25.webp",
+                motivations:"E-mail: Documentos, Atividade Avaliativa, Não Aluno | WhatsApp: Transferência para Renegociação, Orientação sobre Prazos, Dúvidas sobre Certificação",
+                stats:{email:67, wpp:267},
+                insight:"Demanda reduzida com 2% do total"
+            },
+            {
+                name:"IMPACTA DIGITAL",
+                logo:"https://digital.impacta.com.br/hs-fs/hubfs/FACULDADE-LOGO-DIGITAL-NORMAL.png",
+                motivations:"E-mail: Documentos, Tecnologia, Acessos | WhatsApp: Transferência para Renegociação, Orientação sobre Prazos, Dúvidas sobre Certificação",
+                stats:{email:56, wpp:153},
+                insight:"Demanda baixa com 1,3% do total"
+            }
+        ];
+
+        // TOP 5 Maiores Concentradores
+        const topConcentradores = [
+            {rank:1, motivo:"CURSO/CRONOGRAMA", descricao:"Orientação sobre prazos do curso - Dúvidas relacionadas a prazos, datas de entrega e cronograma das disciplinas"},
+            {rank:2, motivo:"ATENDIMENTO", descricao:"Transferência para Retenção - Assuntos relacionados a cancelamento e retenção de alunos"},
+            {rank:3, motivo:"ACESSOS", descricao:"Dúvidas de primeiro acesso - Problemas de login, recuperação de senha e acesso à plataforma"},
+            {rank:4, motivo:"ATENDIMENTO", descricao:"Falta de Interação do Aluno - Acompanhamento e reengajamento de alunos com baixa participação"},
+            {rank:5, motivo:"FINANCEIRO", descricao:"Dúvidas sobre pagamentos - Questões relacionadas a boletos, parcelamento e formas de pagamento"}
+        ];
+
+        // Renderizar Tabela Total
+        const ieTotalTable = document.getElementById('ieTotalTableBody');
+        ieDataTotal.forEach(item => { 
+            ieTotalTable.innerHTML += `<tr class="border-b border-slate-100 hover:bg-slate-50"><td class="px-6 py-3 text-sm text-slate-900">${item.name}</td><td class="px-6 py-3 text-sm text-slate-900 text-right font-medium">${item.value.toLocaleString('pt-BR')}</td></tr>`; 
+        });
+        ieTotalTable.innerHTML += `<tr class="bg-blue-50 border-t-2 border-blue-200"><td class="px-6 py-3 text-sm font-bold text-slate-900">CONSOLIDADO</td><td class="px-6 py-3 text-sm font-bold text-slate-900 text-right">17.442</td></tr>`;
+
+        // Renderizar Tabela WPP
+        const wppTable = document.getElementById('wppTableBody');
+        ieDataTotal.forEach(item => { 
+            wppTable.innerHTML += `<tr class="border-b border-slate-100 hover:bg-slate-50"><td class="px-6 py-3 text-sm text-slate-900">${item.name}</td><td class="px-6 py-3 text-sm text-slate-900 text-right font-medium">${item.wpp.toLocaleString('pt-BR')}</td></tr>`; 
+        });
+        wppTable.innerHTML += `<tr class="bg-green-50 border-t-2 border-green-200"><td class="px-6 py-3 text-sm font-bold text-slate-900">TOTAL WHATSAPP</td><td class="px-6 py-3 text-sm font-bold text-slate-900 text-right">14.156</td></tr>`;
+
+        // Renderizar Tabela Email
+        const emailTable = document.getElementById('emailTableBody');
+        ieDataTotal.forEach(item => { 
+            emailTable.innerHTML += `<tr class="border-b border-slate-100 hover:bg-slate-50"><td class="px-6 py-3 text-sm text-slate-900">${item.name}</td><td class="px-6 py-3 text-sm text-slate-900 text-right font-medium">${item.email.toLocaleString('pt-BR')}</td></tr>`; 
+        });
+        emailTable.innerHTML += `<tr class="bg-slate-100 border-t-2 border-slate-300"><td class="px-6 py-3 text-sm font-bold text-slate-900">TOTAL E-MAIL</td><td class="px-6 py-3 text-sm font-bold text-slate-900 text-right">3.286</td></tr>`;
+
+        // Legenda do Gráfico de Canal
+        const canalLegend = document.getElementById('canalLegend');
+        canalData.forEach(item => { 
+            canalLegend.innerHTML += `<div class="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-100"><div class="flex items-center gap-3"><div class="w-4 h-4 rounded-full shadow-sm" style="background-color: ${item.color}"></div><span class="text-sm font-bold text-slate-700">${item.name}</span></div><div class="flex items-center gap-4"><span class="text-lg font-black text-slate-900">${item.value.toLocaleString('pt-BR')}</span>            <span class="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded-md border border-blue-100">${((item.value/17442)*100).toFixed(1)}%</span></div></div>`; 
+        });
+
+        // Gráfico de Evolução
+        const evolutionOptions = { 
+            series: [
+                { name: 'Atendimentos', type: 'column', data: historicoMensal.map(d => d.total) }, 
+                { name: '% da Base', type: 'line', data: historicoMensal.map(d => d.percentual) }, 
+                { name: 'Base de Ativos', type: 'line', data: historicoMensal.map(d => d.base) }
+            ], 
+            chart: { height: 350, type: 'line', stacked: false, toolbar: { show: false } }, 
+            stroke: { width: [0, 4, 2], curve: 'smooth', dashArray: [0, 0, 5] }, 
+            colors: ['#1e3a8a', '#fbbf24', '#60a5fa'], 
+            xaxis: { categories: historicoMensal.map(d => d.mes) }, 
+            yaxis: [
+                { title: { text: 'Atendimentos' }, labels: { formatter: (v) => v.toLocaleString('pt-BR') } }, 
+                { opposite: true, labels: { formatter: (v) => v.toFixed(2) + '%' } }, 
+                { opposite: true, labels: { formatter: (v) => (v/1000).toFixed(0) + 'k' }, min: 130000, max: 175000 }
+            ], 
+            tooltip: { shared: true, intersect: false, y: { formatter: function (y, { seriesIndex }) { if(seriesIndex === 1) return y.toFixed(2) + '%'; if(seriesIndex === 2) return y.toLocaleString('pt-BR'); return y.toLocaleString('pt-BR'); } } }, 
+            legend: { position: 'bottom' }
+        };
+        new ApexCharts(document.querySelector("#evolutionChart"), evolutionOptions).render();
+
+        // Gráfico de Canal
+        const canalOptions = {
+            series: canalData.map(d => d.value),
+            chart: { type: 'donut', height: 300 },
+            labels: canalData.map(d => d.name),
+            colors: canalData.map(d => d.color),
+            plotOptions: { pie: { donut: { size: '75%' } } },
+            legend: { show: false },
+            dataLabels: { enabled: false }
+        };
+        new ApexCharts(document.querySelector("#canalChart"), canalOptions).render();
+
+        // Análise Executiva
+        const analysis = [
+            { icon: 'trending-up', color: 'green', title: 'Aumento de Demanda em Julho', text: 'O volume total de atendimentos apresentou aumento de 14,4% em julho (17.442) comparado a junho (15.242), indicando crescimento na demanda operacional.' },
+            { icon: 'activity', color: 'blue', title: 'Taxa de Atendimento Controlada', text: 'A taxa de atendimentos frente à base de ativos permanece em 10,31%, mantendo-se dentro do histórico observado ao longo do ano.' },
+            { icon: 'users', color: 'purple', title: 'WhatsApp como Principal Canal', text: 'O canal WhatsApp representa 81,1% de todos os atendimentos do mês, consolidando-se como principal canal de comunicação.' },
+            { icon: 'alert-circle', color: 'red', title: 'PUCRS Concentra Maioria dos Casos', text: 'A instituição PUCRS ONLINE representa 68,6% do total de atendimentos, mantendo-se como maior responsável pela demanda.' }
+        ];
+        const analysisDiv = document.getElementById('executiveAnalysis');
+        analysis.forEach(item => {
+            analysisDiv.innerHTML += `<div class="flex gap-4 p-4 bg-${item.color}-50 rounded-lg border-l-4 border-${item.color}-500"><div class="flex-shrink-0"><i data-lucide="${item.icon}" class="w-6 h-6 text-${item.color}-600 mt-1"></i></div><div><p class="font-semibold text-slate-900">${item.title}</p><p class="text-sm text-slate-700 mt-1">${item.text}</p></div></div>`;
+        });
+
+        // Cards de IE
+        const cardsDiv = document.getElementById('ieCards');
+        ieCardsData.forEach(ie => {
+            cardsDiv.innerHTML += `<div class="bg-white rounded-lg shadow-md p-6"><div class="grid grid-cols-1 md:grid-cols-4 gap-6"><div class="flex items-start justify-center md:justify-start"><div class="bg-black p-4 rounded-lg w-[150px] h-[150px] flex items-center justify-center border border-slate-700"><img src="${ie.logo}" alt="${ie.name}" class="w-full h-full object-contain"></div></div><div class="md:col-span-3 space-y-4"><h3 class="font-bold text-slate-900 text-lg">${ie.name}</h3><div><p class="text-xs font-semibold text-slate-600 mb-1">PRINCIPAIS MOTIVAÇÕES</p><p class="text-sm text-slate-700 leading-relaxed">${ie.motivations}</p></div><div class="p-3 bg-blue-50 rounded border-l-4 border-blue-600"><p class="text-xs text-slate-700 italic">${ie.insight}</p></div><div class="flex gap-8"><div><p class="text-xs text-slate-600 font-semibold">E-MAIL</p><p class="text-lg font-bold text-slate-900">${ie.stats.email.toLocaleString('pt-BR')}</p></div><div><p class="text-xs text-slate-600 font-semibold">WHATSAPP</p><p class="text-lg font-bold text-slate-900">${ie.stats.wpp.toLocaleString('pt-BR')}</p></div></div></div></div></div>`;
+        });
+
+        // TOP 5 Maiores Concentradores
+        const topMotivosTable = document.getElementById('topMotivosTableBody');
+        topConcentradores.forEach(item => {
+            topMotivosTable.innerHTML += `<tr class="border-b border-slate-100 hover:bg-slate-50"><td class="px-6 py-3"><span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-blue-600 text-white font-bold text-sm">${item.rank}</span></td><td class="px-6 py-3 text-sm text-slate-900 font-medium">${item.motivo}</td><td class="px-6 py-3 text-sm text-slate-700">${item.descricao}</td></tr>`;
+        });
+
+        // Inicializar ícones Lucide
+        lucide.createIcons();
+    </script>
+</body>
+</html>
