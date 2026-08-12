@@ -28,7 +28,7 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-blue-600">
                 <div class="flex items-center justify-between">
-                    <div><p class="text-slate-600 text-sm font-medium uppercase">Total de Atendimentos</p><p class="text-3xl font-bold text-slate-900 mt-2">17.442</p></div>
+                    <div><p class="text-slate-600 text-sm font-medium uppercase">Total de Atendimentos</p><p class="text-3xl font-bold text-slate-900 mt-2">17.039</p></div>
                     <div class="bg-blue-100 p-4 rounded-full"><i data-lucide="bar-chart-3" class="w-8 h-8 text-blue-600"></i></div>
                 </div>
             </div>
@@ -44,7 +44,7 @@
             </div>
             <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-yellow-500">
                 <div class="flex items-center justify-between">
-                    <div><p class="text-slate-600 text-sm font-medium uppercase">Atendimentos / Base</p><p class="text-3xl font-bold text-slate-900 mt-2">10,23%</p></div>
+                    <div><p class="text-slate-600 text-sm font-medium uppercase">Atendimentos / Base</p><p class="text-3xl font-bold text-slate-900 mt-2">9,99%</p></div>
                     <div class="bg-yellow-100 p-4 rounded-full"><i data-lucide="trending-up" class="w-8 h-8 text-yellow-600"></i></div>
                 </div>
             </div>
@@ -72,7 +72,7 @@
                 <div class="bg-white rounded-lg shadow-md p-6 h-full">
                     <h2 class="text-lg font-bold text-slate-900 mb-6 uppercase">Distribuição por Canal de Atendimento</h2>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-                        <div class="relative"><div id="canalChart"></div><div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -mt-2 text-center pointer-events-none"><span class="block text-4xl font-bold text-slate-900">17.442</span><span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Atendimentos</span></div></div>
+                        <div class="relative"><div id="canalChart"></div><div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -mt-2 text-center pointer-events-none"><span class="block text-4xl font-bold text-slate-900">17.039</span><span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Atendimentos</span></div></div>
                         <div class="space-y-4" id="canalLegend"></div>
                     </div>
                 </div>
@@ -134,7 +134,7 @@
             {name:"PUCRS ONLINE", value:11968, wpp:10100, email:1868},
             {name:"FAAP ONLINE", value:2375, wpp:1868, email:507},
             {name:"FSL DIGITAL", value:1482, wpp:1100, email:382},
-            {name:"FIA ONLINE", value:1071, wpp:668, email:403},
+            {name:"FIA ONLINE", value:668, wpp:668, email:null},
             {name:"UNESC DIGITAL", value:334, wpp:267, email:67},
             {name:"IMPACTA DIGITAL", value:209, wpp:153, email:56},
             {name:"SANTA CASA ONLINE", value:3, wpp:0, email:3}
@@ -142,7 +142,7 @@
 
         const canalData = [
             {name:"WhatsApp", value:14156, color:"#22c55e"},
-            {name:"E-mail", value:3286, color:"#334155"}
+            {name:"E-mail", value:2883, color:"#334155"}
         ];
 
         // Histórico consolidado (adicionando julho)
@@ -153,7 +153,7 @@
             {mes:"abr/26", total:21323, base:156615, percentual:13.61},
             {mes:"mai/26", total:16377, base:162397, percentual:10.08},
             {mes:"jun/26", total:15242, base:164717, percentual:9.25},
-            {mes:"jul/26", total:17442, base:170497, percentual:10.23}
+            {mes:"jul/26", total:17039, base:170497, percentual:9.99}
         ];
 
         // Dados de IEs com logos
@@ -175,9 +175,9 @@
             {
                 name:"FIA ONLINE",
                 logo:"https://www.fiaonline.com.br/hs-fs/hubfs/FIA-Online---Logo-(Branco)-1-1.webp",
-                motivations:"E-mail: Encerramento dos atendimentos no dia 08/07 | WhatsApp: Dúvidas sobre Certificação, Declaração de Matrícula, Orientação sobre Prazos",
-                stats:{email:403, wpp:668},
-                insight:"Encerramento de atendimentos por e-mail em julho"
+                motivations:"WhatsApp: Dúvidas sobre Certificação, Declaração de Matrícula, Orientação sobre Prazos",
+                stats:{email:null, wpp:668},
+                insight:"Atendimentos concentrados exclusivamente no WhatsApp em julho"
             },
             {
                 name:"FSL DIGITAL",
@@ -216,7 +216,7 @@
         ieDataTotal.forEach(item => { 
             ieTotalTable.innerHTML += `<tr class="border-b border-slate-100 hover:bg-slate-50"><td class="px-6 py-3 text-sm text-slate-900">${item.name}</td><td class="px-6 py-3 text-sm text-slate-900 text-right font-medium">${item.value.toLocaleString('pt-BR')}</td></tr>`; 
         });
-        ieTotalTable.innerHTML += `<tr class="bg-blue-50 border-t-2 border-blue-200"><td class="px-6 py-3 text-sm font-bold text-slate-900">CONSOLIDADO</td><td class="px-6 py-3 text-sm font-bold text-slate-900 text-right">17.442</td></tr>`;
+        ieTotalTable.innerHTML += `<tr class="bg-blue-50 border-t-2 border-blue-200"><td class="px-6 py-3 text-sm font-bold text-slate-900">CONSOLIDADO</td><td class="px-6 py-3 text-sm font-bold text-slate-900 text-right">17.039</td></tr>`;
 
         // Renderizar Tabela WPP
         const wppTable = document.getElementById('wppTableBody');
@@ -228,14 +228,16 @@
         // Renderizar Tabela Email
         const emailTable = document.getElementById('emailTableBody');
         ieDataTotal.forEach(item => { 
-            emailTable.innerHTML += `<tr class="border-b border-slate-100 hover:bg-slate-50"><td class="px-6 py-3 text-sm text-slate-900">${item.name}</td><td class="px-6 py-3 text-sm text-slate-900 text-right font-medium">${item.email.toLocaleString('pt-BR')}</td></tr>`; 
+            if (item.email !== null) {
+                emailTable.innerHTML += `<tr class="border-b border-slate-100 hover:bg-slate-50"><td class="px-6 py-3 text-sm text-slate-900">${item.name}</td><td class="px-6 py-3 text-sm text-slate-900 text-right font-medium">${item.email.toLocaleString('pt-BR')}</td></tr>`;
+            }
         });
-        emailTable.innerHTML += `<tr class="bg-slate-100 border-t-2 border-slate-300"><td class="px-6 py-3 text-sm font-bold text-slate-900">TOTAL E-MAIL</td><td class="px-6 py-3 text-sm font-bold text-slate-900 text-right">3.286</td></tr>`;
+        emailTable.innerHTML += `<tr class="bg-slate-100 border-t-2 border-slate-300"><td class="px-6 py-3 text-sm font-bold text-slate-900">TOTAL E-MAIL</td><td class="px-6 py-3 text-sm font-bold text-slate-900 text-right">2.883</td></tr>`;
 
         // Legenda do Gráfico de Canal
         const canalLegend = document.getElementById('canalLegend');
         canalData.forEach(item => { 
-            canalLegend.innerHTML += `<div class="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-100"><div class="flex items-center gap-3"><div class="w-4 h-4 rounded-full shadow-sm" style="background-color: ${item.color}"></div><span class="text-sm font-bold text-slate-700">${item.name}</span></div><div class="flex items-center gap-4"><span class="text-lg font-black text-slate-900">${item.value.toLocaleString('pt-BR')}</span>            <span class="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded-md border border-blue-100">${((item.value/17442)*100).toFixed(1)}%</span></div></div>`; 
+            canalLegend.innerHTML += `<div class="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-100"><div class="flex items-center gap-3"><div class="w-4 h-4 rounded-full shadow-sm" style="background-color: ${item.color}"></div><span class="text-sm font-bold text-slate-700">${item.name}</span></div><div class="flex items-center gap-4"><span class="text-lg font-black text-slate-900">${item.value.toLocaleString('pt-BR')}</span>            <span class="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded-md border border-blue-100">${((item.value/17039)*100).toFixed(1)}%</span></div></div>`; 
         });
 
         // Gráfico de Evolução
@@ -273,10 +275,10 @@
 
         // Análise Executiva
         const analysis = [
-            { icon: 'trending-up', color: 'green', title: 'Aumento de Demanda em Julho', text: 'O volume total de atendimentos apresentou aumento de 14,4% em julho (17.442) comparado a junho (15.242), indicando crescimento na demanda operacional.' },
-            { icon: 'activity', color: 'blue', title: 'Taxa de Atendimento Controlada', text: 'A taxa de atendimentos frente à base de ativos permanece em 10,31%, mantendo-se dentro do histórico observado ao longo do ano.' },
-            { icon: 'users', color: 'purple', title: 'WhatsApp como Principal Canal', text: 'O canal WhatsApp representa 81,1% de todos os atendimentos do mês, consolidando-se como principal canal de comunicação.' },
-            { icon: 'alert-circle', color: 'red', title: 'PUCRS Concentra Maioria dos Casos', text: 'A instituição PUCRS ONLINE representa 68,6% do total de atendimentos, mantendo-se como maior responsável pela demanda.' }
+            { icon: 'trending-up', color: 'green', title: 'Aumento de Demanda em Julho', text: 'O volume total de atendimentos apresentou aumento de 11,8% em julho (17.039) comparado a junho (15.242), indicando crescimento na demanda operacional.' },
+            { icon: 'activity', color: 'blue', title: 'Taxa de Atendimento Controlada', text: 'A taxa de atendimentos frente à base de ativos permanece em 9,99%, mantendo-se dentro do histórico observado ao longo do ano.' },
+            { icon: 'users', color: 'purple', title: 'WhatsApp como Principal Canal', text: 'O canal WhatsApp representa 83,1% de todos os atendimentos do mês, consolidando-se como principal canal de comunicação.' },
+            { icon: 'alert-circle', color: 'red', title: 'PUCRS Concentra Maioria dos Casos', text: 'A instituição PUCRS ONLINE representa 70,2% do total de atendimentos, mantendo-se como maior responsável pela demanda.' }
         ];
         const analysisDiv = document.getElementById('executiveAnalysis');
         analysis.forEach(item => {
@@ -286,7 +288,7 @@
         // Cards de IE
         const cardsDiv = document.getElementById('ieCards');
         ieCardsData.forEach(ie => {
-            cardsDiv.innerHTML += `<div class="bg-white rounded-lg shadow-md p-6"><div class="grid grid-cols-1 md:grid-cols-4 gap-6"><div class="flex items-start justify-center md:justify-start"><div class="bg-black p-4 rounded-lg w-[150px] h-[150px] flex items-center justify-center border border-slate-700"><img src="${ie.logo}" alt="${ie.name}" class="w-full h-full object-contain"></div></div><div class="md:col-span-3 space-y-4"><h3 class="font-bold text-slate-900 text-lg">${ie.name}</h3><div><p class="text-xs font-semibold text-slate-600 mb-1">PRINCIPAIS MOTIVAÇÕES</p><p class="text-sm text-slate-700 leading-relaxed">${ie.motivations}</p></div><div class="p-3 bg-blue-50 rounded border-l-4 border-blue-600"><p class="text-xs text-slate-700 italic">${ie.insight}</p></div><div class="flex gap-8"><div><p class="text-xs text-slate-600 font-semibold">E-MAIL</p><p class="text-lg font-bold text-slate-900">${ie.stats.email.toLocaleString('pt-BR')}</p></div><div><p class="text-xs text-slate-600 font-semibold">WHATSAPP</p><p class="text-lg font-bold text-slate-900">${ie.stats.wpp.toLocaleString('pt-BR')}</p></div></div></div></div></div>`;
+            cardsDiv.innerHTML += `<div class="bg-white rounded-lg shadow-md p-6"><div class="grid grid-cols-1 md:grid-cols-4 gap-6"><div class="flex items-start justify-center md:justify-start"><div class="bg-black p-4 rounded-lg w-[150px] h-[150px] flex items-center justify-center border border-slate-700"><img src="${ie.logo}" alt="${ie.name}" class="w-full h-full object-contain"></div></div><div class="md:col-span-3 space-y-4"><h3 class="font-bold text-slate-900 text-lg">${ie.name}</h3><div><p class="text-xs font-semibold text-slate-600 mb-1">PRINCIPAIS MOTIVAÇÕES</p><p class="text-sm text-slate-700 leading-relaxed">${ie.motivations}</p></div><div class="p-3 bg-blue-50 rounded border-l-4 border-blue-600"><p class="text-xs text-slate-700 italic">${ie.insight}</p></div><div class="flex gap-8">${ie.stats.email !== null ? `<div><p class="text-xs text-slate-600 font-semibold">E-MAIL</p><p class="text-lg font-bold text-slate-900">${ie.stats.email.toLocaleString('pt-BR')}</p></div>` : ''}<div><p class="text-xs text-slate-600 font-semibold">WHATSAPP</p><p class="text-lg font-bold text-slate-900">${ie.stats.wpp.toLocaleString('pt-BR')}</p></div></div></div></div></div>`;
         });
 
         // TOP 5 Maiores Concentradores
